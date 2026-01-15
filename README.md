@@ -23,11 +23,19 @@ cd solidity-audit-skill
 ./install.sh
 ```
 
-That's it. The script:
-- Builds the MCP server
-- Links skill files to `~/.claude/skills/solidity-audit/`
-- Adds the `/audit` command
-- Configures the MCP server in `~/.claude/mcp.json`
+The installer will prompt you to choose:
+
+| Option | What you get |
+|--------|--------------|
+| **Full install** (recommended) | Skill + MCP server with structured tools |
+| **Skill only** | Just the audit methodology (no Node.js required) |
+
+Or use flags:
+```bash
+./install.sh              # Interactive prompt
+./install.sh --skill-only # Skip MCP server
+./install.sh --help       # Show options
+```
 
 To uninstall: `./uninstall.sh`
 
