@@ -40,8 +40,8 @@ Please be respectful and constructive in all interactions. We're building tools 
 
 ```bash
 # Clone your fork
-git clone https://github.com/YOUR_USERNAME/solidity-audit-mcp.git
-cd solidity-audit-mcp
+git clone https://github.com/YOUR_USERNAME/solidity-audit-skill.git
+cd solidity-audit-skill
 
 # Install dependencies
 npm install

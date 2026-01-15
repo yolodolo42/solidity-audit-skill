@@ -1,11 +1,11 @@
 {
-  "name": "solidity-audit-mcp",
+  "name": "solidity-audit-skill",
   "version": "1.0.0",
   "description": "Claude Code skill for Solidity smart contract security audits - includes MCP server with structured build/test/audit tools",
   "main": "dist/index.js",
   "type": "module",
   "bin": {
-    "solidity-audit-mcp": "./dist/index.js"
+    "solidity-audit-skill": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc",
@@ -32,12 +32,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yolodolo42/solidity-audit-mcp.git"
+    "url": "git+https://github.com/yolodolo42/solidity-audit-skill.git"
   },
   "bugs": {
-    "url": "https://github.com/yolodolo42/solidity-audit-mcp/issues"
+    "url": "https://github.com/yolodolo42/solidity-audit-skill/issues"
   },
-  "homepage": "https://github.com/yolodolo42/solidity-audit-mcp#readme",
+  "homepage": "https://github.com/yolodolo42/solidity-audit-skill#readme",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0"
   },

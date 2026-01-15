@@ -14,7 +14,7 @@ A clear description of the bug.
 
 - **Node.js version**:
 - **OS**:
-- **solidity-audit-mcp version**:
+- **solidity-audit-skill version**:
 
 ## Steps to Reproduce
 

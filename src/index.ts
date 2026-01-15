@@ -173,7 +173,7 @@ Note: This tool is primarily for Foundry projects. For Hardhat, consider Echidna
 
 const server = new Server(
   {
-    name: "solidity-audit-mcp",
+    name: "solidity-audit-skill",
     version: "1.0.0",
   },
   {

@@ -1,6 +1,6 @@
 # Solidity Audit Skill for Claude Code
 
-[![CI](https://github.com/yolodolo42/solidity-audit-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/yolodolo42/solidity-audit-mcp/actions/workflows/ci.yml)
+[![CI](https://github.com/yolodolo42/solidity-audit-skill/actions/workflows/ci.yml/badge.svg)](https://github.com/yolodolo42/solidity-audit-skill/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org)
 
@@ -18,8 +18,8 @@ Ask Claude to "audit my contracts" and it will:
 ## Install
 
 ```bash
-git clone https://github.com/yolodolo42/solidity-audit-mcp.git
-cd solidity-audit-mcp
+git clone https://github.com/yolodolo42/solidity-audit-skill.git
+cd solidity-audit-skill
 ./install.sh
 ```
 
