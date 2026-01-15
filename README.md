@@ -15,33 +15,21 @@ Ask Claude to "audit my contracts" and it will:
 3. **Manual review** - Systematic checklist covering reentrancy, access control, MEV, oracles, etc.
 4. **Generate report** - Findings with severity, SWC tags, file:line references, and verification tests
 
-## Quick Install
+## Install
 
 ```bash
-# Clone
 git clone https://github.com/yolodolo42/solidity-audit-mcp.git
 cd solidity-audit-mcp
-
-# Build MCP server
-npm install && npm run build
-
-# Install skill (copy to your project or global config)
-cp -r skill/SKILL.md skill/resources ~/.claude/skills/solidity-audit/
-cp skill/commands/audit.md ~/.claude/commands/
+./install.sh
 ```
 
-Add MCP server to your `.mcp.json`:
-```json
-{
-  "mcpServers": {
-    "solidity_audit": {
-      "type": "stdio",
-      "command": "node",
-      "args": ["/absolute/path/to/solidity-audit-mcp/dist/index.js"]
-    }
-  }
-}
-```
+That's it. The script:
+- Builds the MCP server
+- Links skill files to `~/.claude/skills/solidity-audit/`
+- Adds the `/audit` command
+- Configures the MCP server in `~/.claude/mcp.json`
+
+To uninstall: `./uninstall.sh`
 
 ## Usage
 
