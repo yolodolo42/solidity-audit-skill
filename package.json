@@ -1,7 +1,7 @@
 {
   "name": "solidity-audit-mcp",
   "version": "1.0.0",
-  "description": "MCP server for Solidity smart contract auditing - provides structured tools for building, testing, and reviewing smart contracts with Claude Code",
+  "description": "Claude Code skill for Solidity smart contract security audits - includes MCP server with structured build/test/audit tools",
   "main": "dist/index.js",
   "type": "module",
   "bin": {

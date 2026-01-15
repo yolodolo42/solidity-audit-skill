@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "solidity_audit": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["mcp/solidity-audit-mcp/dist/index.js"],
+      "env": {}
+    }
+  }
+}

@@ -1,205 +1,133 @@
-# Solidity Audit MCP Server
+# Solidity Audit Skill for Claude Code
 
 [![CI](https://github.com/yolodolo42/solidity-audit-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/yolodolo42/solidity-audit-mcp/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org)
 
-An MCP (Model Context Protocol) server that provides structured tools for auditing Solidity smart contracts. Designed to work with [Claude Code](https://claude.ai/code) for comprehensive security reviews.
+A Claude Code skill that turns Claude into a smart contract security auditor. Automatically triggers when you ask to audit, review, or assess Solidity contracts.
 
-## Features
+## What It Does
 
-- **Project Detection**: Automatically identifies Foundry/Hardhat projects and available commands
-- **Structured Build Output**: Compiles projects and returns parsed errors/warnings with file locations
-- **Test Execution**: Runs unit tests and provides structured failure information with traces
-- **Invariant Testing**: Executes invariant/fuzz tests with reproduction guidance
-- **Security-First Design**: Allowlisted commands, input validation, secret redaction, timeouts
+Ask Claude to "audit my contracts" and it will:
 
-## Quick Start
+1. **Detect your project** - Foundry or Hardhat, Solidity versions
+2. **Build & test** - Compile, run tests, check invariants
+3. **Manual review** - Systematic checklist covering reentrancy, access control, MEV, oracles, etc.
+4. **Generate report** - Findings with severity, SWC tags, file:line references, and verification tests
 
-### Installation
+## Quick Install
 
 ```bash
-# Clone the repository
+# Clone
 git clone https://github.com/yolodolo42/solidity-audit-mcp.git
 cd solidity-audit-mcp
 
-# Install dependencies
-npm install
+# Build MCP server
+npm install && npm run build
 
-# Build
-npm run build
+# Install skill (copy to your project or global config)
+cp -r skill/SKILL.md skill/resources ~/.claude/skills/solidity-audit/
+cp skill/commands/audit.md ~/.claude/commands/
 ```
 
-### Configure Claude Code
-
-Add to your project's `.mcp.json`:
-
+Add MCP server to your `.mcp.json`:
 ```json
 {
   "mcpServers": {
     "solidity_audit": {
       "type": "stdio",
       "command": "node",
-      "args": ["/path/to/solidity-audit-mcp/dist/index.js"],
-      "env": {}
+      "args": ["/absolute/path/to/solidity-audit-mcp/dist/index.js"]
     }
   }
 }
 ```
 
-Or configure globally in Claude Code settings for use across all projects.
+## Usage
 
-## Available Tools
+Just ask Claude:
 
-| Tool | Description |
-|------|-------------|
-| `audit_detect` | Detect project type (Foundry/Hardhat), Solidity versions, and available commands |
-| `audit_build` | Compile project and return structured errors/warnings with locations |
-| `audit_test` | Run unit tests and return failing test details with traces |
-| `audit_invariants` | Run invariant/fuzz tests and return violations with reproduction steps |
-
-### `audit_detect`
-
-Detects the project type and available build/test commands.
-
-```json
-// Input
-{ "projectPath": "." }
-
-// Output
-{
-  "projectType": "foundry",
-  "solidityVersionHints": ["^0.8.20"],
-  "buildCommand": { "cmd": "forge", "args": ["build"] },
-  "testCommand": { "cmd": "forge", "args": ["test", "-vvv"] },
-  "invariantCommand": { "cmd": "forge", "args": ["test", "--match-test", "invariant", "-vvv"] },
-  "notes": ["Fuzz testing configuration detected in foundry.toml."]
-}
+```
+"Audit my smart contracts"
+"Review this contract for security issues"
+"Check for reentrancy vulnerabilities"
+"Run a security assessment"
 ```
 
-### `audit_build`
-
-Compiles the project and returns structured error/warning information.
-
-```json
-// Input
-{ "projectPath": ".", "mode": "auto", "extraArgs": [] }
-
-// Output
-{
-  "ok": true,
-  "compilerErrors": [],
-  "warnings": [{ "file": "src/Vault.sol", "line": 42, "message": "Unused local variable" }],
-  "summary": "Build successful with 1 warning(s)"
-}
+Or use the slash command:
+```
+/audit
+/audit Focus on access control
 ```
 
-### `audit_test`
+## What's Included
 
-Runs unit tests and returns structured results.
+### Skill (`skill/`)
+- **SKILL.md** - Main skill with 5-phase audit methodology
+- **resources/checklist.md** - 100+ item security checklist (SWC-aligned)
+- **resources/severity-rubric.md** - Impact/likelihood severity matrix
+- **resources/report-template.md** - Professional audit report format
+- **commands/audit.md** - `/audit` slash command
 
-```json
-// Input
-{ "projectPath": ".", "match": "testTransfer", "extraArgs": [] }
+### MCP Server (`src/`)
+Structured tools that return parsed, actionable output:
 
-// Output
-{
-  "ok": false,
-  "totalTests": 15,
-  "passedTests": 14,
-  "failingTests": [{ "name": "testTransferInsufficientBalance", "file": "test/Vault.t.sol", "reason": "Revert: Insufficient balance" }],
-  "failingTraces": ["..."],
-  "summary": "1/15 tests failed"
+| Tool | Purpose |
+|------|---------|
+| `audit_detect` | Detect project type, Solidity versions, available commands |
+| `audit_build` | Compile with structured errors/warnings + file locations |
+| `audit_test` | Run tests with failure details and traces |
+| `audit_invariants` | Run fuzz tests with reproduction steps |
+
+## Security Checklist Coverage
+
+- Access Control & Authorization
+- Reentrancy (CEI, cross-function, read-only)
+- Upgradeability (proxy patterns, storage collisions)
+- Math & Accounting (precision, rounding, overflow)
+- Oracle Manipulation
+- DoS Vectors
+- MEV & Frontrunning
+- Signature Replay
+
+## Example Output
+
+```markdown
+## Findings Summary
+
+| ID | Title | Severity | SWC |
+|----|-------|----------|-----|
+| H-01 | Reentrancy in withdraw() | High | SWC-107 |
+| M-01 | Missing slippage protection | Medium | SWC-114 |
+
+### [H-01] Reentrancy in withdraw()
+
+**Location**: `src/Vault.sol:142-156`
+
+**Description**: The withdraw function sends ETH before updating state...
+
+**Remediation**: Apply CEI pattern or use ReentrancyGuard
+
+**Verification Test**:
+function test_ReentrancyFixed() public {
+    // Test that reentrancy is no longer possible
 }
 ```
-
-### `audit_invariants`
-
-Runs invariant/fuzz tests and returns violation details with reproduction guidance.
-
-```json
-// Input
-{ "projectPath": ".", "extraArgs": ["--runs", "1000"] }
-
-// Output
-{
-  "ok": false,
-  "violations": [{ "invariant": "invariant_totalSupplyMatchesBalances", "file": "...", "details": "..." }],
-  "seedHints": ["12345"],
-  "reproductionSteps": ["1. Set FOUNDRY_FUZZ_SEED=12345", "2. Run: forge test --match-test ..."],
-  "summary": "1 invariant violation(s) found"
-}
-```
-
-## Security
-
-This server is designed with security as a priority:
-
-| Measure | Description |
-|---------|-------------|
-| **Command Allowlisting** | Only `forge`, `npx`, `npm`, `yarn`, `pnpm` permitted |
-| **Argument Validation** | Shell metacharacters and injection attempts blocked |
-| **Path Validation** | Prevents path traversal attacks |
-| **Secret Redaction** | Private keys and sensitive data automatically redacted |
-| **Timeouts** | Enforced timeouts (2-10 minutes depending on operation) |
-| **Output Limits** | Large outputs truncated to prevent memory issues |
 
 ## Development
 
 ```bash
-# Build
-npm run build
-
-# Watch mode (rebuild on changes)
-npm run dev
-
-# Lint
-npm run lint
-
-# Test
-npm test
+npm run build    # Compile TypeScript
+npm run dev      # Watch mode
+npm run lint     # ESLint
+npm test         # Run tests
 ```
 
-### Project Structure
+## Related
 
-```
-src/
-├── index.ts           # MCP server entry point
-├── schemas.ts         # Type definitions and JSON schemas
-└── tools/
-    ├── utils.ts       # Shared utilities (exec, validation, parsing)
-    ├── detect.ts      # Project detection tool
-    ├── build.ts       # Build tool
-    ├── test.ts        # Test runner tool
-    └── invariants.ts  # Invariant test tool
-```
-
-## Troubleshooting
-
-### Server not loading
-
-1. Ensure the server is built: `npm run build`
-2. Check that `dist/index.js` exists
-3. Verify the path in `.mcp.json` is correct
-4. Run Claude Code with `--debug` flag
-
-### Command not found errors
-
-Ensure [Foundry](https://book.getfoundry.sh/getting-started/installation) (`forge`) or Hardhat (`npx hardhat`) are installed and in your PATH.
-
-### Timeout errors
-
-For large projects, increase timeouts by modifying `DEFAULT_TIMEOUT_MS` in `src/tools/utils.ts`.
-
-## Contributing
-
-Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-## Related Projects
-
-- [Slither-MCP](https://github.com/trailofbits/slither-mcp) - MCP server for Slither static analysis (AGPL-3.0)
-- [Model Context Protocol](https://modelcontextprotocol.io/) - MCP specification
-- [Claude Code](https://claude.ai/code) - AI coding assistant
+- [Slither-MCP](https://github.com/trailofbits/slither-mcp) - Static analysis MCP server
+- [SWC Registry](https://swcregistry.io/) - Smart Contract Weakness Classification
+- [Claude Code Skills](https://docs.anthropic.com/claude-code/skills) - Skill documentation
 
 ## License
 
