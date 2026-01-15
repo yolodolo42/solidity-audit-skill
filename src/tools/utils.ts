@@ -23,7 +23,7 @@ const DEFAULT_TIMEOUT_MS = 120_000;
 /** Patterns that might indicate secrets in output */
 const SECRET_PATTERNS = [
   /0x[a-fA-F0-9]{64}/g,  // Private keys (64 hex chars)
-  /(?:api[_-]?key|apikey|secret|password|token)[=:]["']?[\w\-]+["']?/gi,
+  /(?:api[_-]?key|apikey|secret|password|token)[=:]["']?[\w-]+["']?/gi,
   /(?:PRIVATE[_-]?KEY|MNEMONIC)[=:]["']?[\w\s]+["']?/gi,
 ];
 
